@@ -2,9 +2,10 @@
 
 ## Deployed Contracts
 
-| Contract      | Network | Address                                      | Explorer                                                                                    | ABI                                  |
-| ------------- | ------- | -------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------ |
-| AgentRegistry | Base    | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on BaseScan](https://basescan.org/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32) | [View ABI](./abi/AgentRegistry.json) |
+| Contract      | Network | Address                                      | Explorer                                                                                           | ABI                                  |
+| ------------- | ------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| AgentRegistry | Base    | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on BaseScan](https://basescan.org/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32)        | [View ABI](./abi/AgentRegistry.json) |
+| AgentRegistry | Sepolia | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on Sepolia](https://sepolia.etherscan.io/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32) | [View ABI](./abi/AgentRegistry.json) |
 
 > Note: Replace `<deployment-address>` with the actual deployed contract addresses for each network. The ABI is automatically exported to `../p2p/src/abi/AgentRegistry.json` when running `bun run export-abi`.
 
@@ -29,10 +30,8 @@ bun install
 
 ```env
 API_KEY_INFURA=your_infura_key
-API_KEY_ALCHEMY=your_alchemy_key
+ALCHEMY_API_KEY=your_alchemy_key
 BASESCAN_API_KEY=your_basescan_key
-BASE_RPC_URL=your_base_rpc_url
-MODE_RPC_URL=your_mode_rpc_url
 ```
 
 ## Development Commands
