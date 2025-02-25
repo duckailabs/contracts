@@ -3,6 +3,7 @@ pragma solidity ^0.8.25;
 
 import { Test } from "forge-std/src/Test.sol";
 import { AgentRegistry } from "../src/AgentRegistry.sol";
+import { Ownable } from "solady/src/auth/Ownable.sol";
 
 contract AgentRegistryTest is Test {
     AgentRegistry public registry;
@@ -221,7 +222,7 @@ contract AgentRegistryTest is Test {
         registry.registerAgent("Alice", ALICE_METADATA);
 
         vm.prank(bob);
-        vm.expectRevert(AgentRegistry.NotAdmin.selector);
+        vm.expectRevert(Ownable.Unauthorized.selector);
         registry.blockAgent(alice);
     }
 
@@ -579,7 +580,7 @@ contract AgentRegistryTest is Test {
         registry.registerAgent("Alice", "metadata_uri");
 
         vm.prank(bob);
-        vm.expectRevert(AgentRegistry.NotAdmin.selector);
+        vm.expectRevert(Ownable.Unauthorized.selector);
         registry.setCanRate(alice, true);
     }
 
@@ -676,5 +677,72 @@ contract AgentRegistryTest is Test {
         vm.prank(alice);
         vm.expectRevert(AgentRegistry.AgentNotRegistered.selector);
         registry.reportInteraction(bob, true);
+    }
+
+    function test_OwnershipInitialization() view public {
+        assertEq(registry.owner(), address(this));
+    }
+
+    function test_TransferOwnership() public {
+        // Alice requests handover first
+        vm.prank(alice);
+        registry.requestOwnershipHandover();
+        
+        // Owner completes the handover
+        registry.completeOwnershipHandover(alice);
+        assertEq(registry.owner(), alice);
+    }
+
+    function test_RevertWhenNoHandoverRequest() public {
+        // Try to complete handover without request
+        vm.expectRevert(Ownable.NoHandoverRequest.selector);
+        registry.completeOwnershipHandover(alice);
+    }
+
+    function test_CancelOwnershipHandover() public {
+        // Alice requests handover
+        vm.prank(alice);
+        registry.requestOwnershipHandover();
+        
+        // Alice cancels request
+        vm.prank(alice);
+        registry.cancelOwnershipHandover();
+        
+        // Try to complete cancelled handover
+        vm.expectRevert(Ownable.NoHandoverRequest.selector);
+        registry.completeOwnershipHandover(alice);
+    }
+
+    function test_OwnershipHandoverExpiry() public {
+        // Alice requests handover
+        vm.prank(alice);
+        registry.requestOwnershipHandover();
+        
+        // Warp past handover validity period (48 hours + 1 second)
+        vm.warp(block.timestamp + 48 hours + 1);
+        
+        // Try to complete expired handover
+        vm.expectRevert(Ownable.NoHandoverRequest.selector);
+        registry.completeOwnershipHandover(alice);
+    }
+
+    function test_RenounceOwnership() public {
+        registry.renounceOwnership();
+        assertEq(registry.owner(), address(0));
+        
+        // Try to call an owner function after renouncing
+        vm.expectRevert(Ownable.Unauthorized.selector);
+        registry.blockAgent(alice);
+    }
+
+    function test_RevertWhenNonOwnerRenounces() public {
+        vm.prank(alice);
+        vm.expectRevert(Ownable.Unauthorized.selector);
+        registry.renounceOwnership();
+    }
+
+    function test_RevertWhenTransferringToZeroAddress() public {
+        vm.expectRevert(Ownable.NewOwnerIsZeroAddress.selector);
+        registry.transferOwnership(address(0));
     }
 }

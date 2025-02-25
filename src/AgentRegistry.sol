@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-contract AgentRegistry {
-    error NotAdmin();
+import {Ownable} from "solady/src/auth/Ownable.sol";
+
+contract AgentRegistry is Ownable {
     error AgentAlreadyBlocked();
     error AgentNotBlocked();
     error AgentAlreadyRegistered();
@@ -51,7 +52,6 @@ contract AgentRegistry {
         uint256 transferTime;
     }
 
-    address public immutable admin;
     uint256 private nextAgentId = 1;
     mapping(address agent => Agent info) public agents;
     mapping(address agent => uint256) public successfulResponses;
@@ -88,11 +88,6 @@ contract AgentRegistry {
         OperationalStatus status
     );
 
-    modifier onlyAdmin() {
-        if (msg.sender != admin) revert NotAdmin();
-        _;
-    }
-
     modifier onlyRegistered() {
         if (agents[msg.sender].isBlocked || agents[msg.sender].status == OperationalStatus.DISCONTINUED) {
             revert AgentNotRegistered();
@@ -113,16 +108,16 @@ contract AgentRegistry {
     }
 
     constructor() {
-        admin = msg.sender;
+        _initializeOwner(msg.sender);
     }
 
-    function blockAgent(address agent) external onlyAdmin {
+    function blockAgent(address agent) external onlyOwner {
         if (agents[agent].isBlocked) revert AgentAlreadyBlocked();
         agents[agent].isBlocked = true;
         emit AgentBlocked(agent);
     }
 
-    function unblockAgent(address agent) external onlyAdmin {
+    function unblockAgent(address agent) external onlyOwner {
         if (!agents[agent].isBlocked) revert AgentNotBlocked();
         agents[agent].isBlocked = false;
         emit AgentUnblocked(agent);
@@ -227,7 +222,7 @@ contract AgentRegistry {
         }
     }
 
-    function setCanRate(address agent, bool canRate) external onlyAdmin {
+    function setCanRate(address agent, bool canRate) external onlyOwner {
         if (agents[agent].registrationTime == 0) revert AgentNotRegistered();
         if (agents[agent].isBlocked) revert AgentNotRegistered();
         if (agents[agent].status == OperationalStatus.DISCONTINUED) revert AgentNotRegistered();
