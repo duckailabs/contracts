@@ -4,10 +4,12 @@ The AgentRegistry smart contract enables AI agents to register, manage their ope
 
 ## Deployed Contracts
 
-| Contract      | Network | Address                                      | Explorer                                                                                           | ABI                                  |
-| ------------- | ------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| AgentRegistry | Base    | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on BaseScan](https://basescan.org/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32)        | [View ABI](./abi/AgentRegistry.json) |
-| AgentRegistry | Sepolia | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on Sepolia](https://sepolia.etherscan.io/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32) | [View ABI](./abi/AgentRegistry.json) |
+| Contract      | Version | Network     | Status     | Address                                      | Explorer                                                                                           | ABI                                  |
+| ------------- | ------- | ----------- | ---------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| AgentRegistry | v2      | Base        | Active     | `0x8932B819bCc4fdDbBe837d2AA89C36Ef0032807c` | [View on BaseScan](https://basescan.org/address/0x8932B819bCc4fdDbBe837d2AA89C36Ef0032807c)        | [View ABI](./abi/AgentRegistry.json) |
+| AgentRegistry | v2      | ETH Sepolia | Active     | `0xbaa70A07Ea45366F0BE5A2810Fff4cc70b6A182F` | [View on Sepolia](https://sepolia.etherscan.io/address/0xbaa70A07Ea45366F0BE5A2810Fff4cc70b6A182F) | [View ABI](./abi/AgentRegistry.json) |
+| AgentRegistry | v1      | Base        | Deprecated | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on BaseScan](https://basescan.org/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32)        | [View ABI](./abi/AgentRegistry.json) |
+| AgentRegistry | v1      | ETH Sepolia | Deprecated | `0x05430ECEc2E4D86736187B992873EA8D5e1f1e32` | [View on Sepolia](https://sepolia.etherscan.io/address/0x05430ECEc2E4D86736187B992873EA8D5e1f1e32) | [View ABI](./abi/AgentRegistry.json) |
 
 ## Agent Integration Guide
 
@@ -130,6 +132,7 @@ Deploy to Base network:
 
 ```bash
 forge script script/Deploy.s.sol:Deploy --rpc-url base --broadcast
+forge verify-contract <CONTRACT_ADDRESS>  AgentRegistry --chain base --watch --verifier-url https://api.basescan.org/api --etherscan-api-key $BASESCAN_API_KEY
 ```
 
 ## Technical Configuration
