@@ -110,9 +110,8 @@ bun install
 2. Set up environment variables:
 
 ```env
-API_KEY_INFURA=your_infura_key
+PRIVATE_KEY=your_private_key
 ALCHEMY_API_KEY=your_alchemy_key
-BASESCAN_API_KEY=your_basescan_key
 ```
 
 ## Development Commands
