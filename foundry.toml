@@ -15,6 +15,7 @@
   solc_version = "0.8.25"
   src = "src"
   test = "test"
+libs = ["node_modules", "lib"]
 
 [profile.ci]
   fuzz = { runs = 10_000 }
@@ -23,7 +24,7 @@
 [etherscan]
   #arbitrum = { key = "${API_KEY_ARBISCAN}" }
   #avalanche = { key = "${API_KEY_SNOWTRACE}" }
-  #base = { key = "${BASESCAN_API_KEY}" }
+  base = { key = "${BASESCAN_API_KEY}" }
   #bnb_smart_chain = { key = "${API_KEY_BSCSCAN}" }
   #gnosis_chain = { key = "${API_KEY_GNOSISSCAN}" }
   #goerli = { key = "${API_KEY_ETHERSCAN}" }
@@ -43,15 +44,5 @@
   wrap_comments = true
 
 [rpc_endpoints]
-  arbitrum = "https://arbitrum-mainnet.infura.io/v3/${API_KEY_INFURA}"
-  avalanche = "https://avalanche-mainnet.infura.io/v3/${API_KEY_INFURA}"
-  base = "${BASE_RPC_URL}"
-  bnb_smart_chain = "https://bsc-dataseed.binance.org"
-  gnosis_chain = "https://rpc.gnosischain.com"
-  goerli = "https://goerli.infura.io/v3/${API_KEY_INFURA}"
-  localhost = "http://localhost:8545"
-  mainnet = "https://eth-mainnet.g.alchemy.com/v2/${API_KEY_ALCHEMY}"
-  optimism = "https://optimism-mainnet.infura.io/v3/${API_KEY_INFURA}"
-  polygon = "https://polygon-mainnet.infura.io/v3/${API_KEY_INFURA}"
+  base = "https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
   sepolia = "https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
-  mode = "${MODE_RPC_URL}"

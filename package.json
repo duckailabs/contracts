@@ -1,13 +1,14 @@
 {
   "name": "@duckailabs/contracts",
   "description": "Foundry-based template for developing Solidity smart contracts",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": {
     "name": "0xglu",
     "url": "https://github.com/duckailabs/contracts"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.1"
+    "@openzeppelin/contracts": "^5.0.1",
+    "solady": "^0.1.9"
   },
   "devDependencies": {
     "forge-std": "github:foundry-rs/forge-std#v1.8.1",
@@ -27,6 +28,7 @@
   "scripts": {
     "clean": "rm -rf cache out",
     "build": "forge build",
+    "verify": "forge verify-contract 0x8932B819bCc4fdDbBe837d2AA89C36Ef0032807c  AgentRegistry --chain base --watch --verifier-url https://api.basescan.org/api --etherscan-api-key $BASESCAN_API_KEY",
     "lint": "bun run lint:sol && bun run prettier:check",
     "lint:sol": "forge fmt --check && bun solhint \"{script,src,test}/**/*.sol\"",
     "prettier:check": "prettier --check \"**/*.{json,md,yml}\" --ignore-path \".prettierignore\"",
@@ -34,6 +36,6 @@
     "test": "forge test",
     "test:coverage": "forge coverage",
     "test:coverage:report": "forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage",
-    "export-abi": "forge inspect AgentRegistry abi > ../p2p/src/abi/AgentRegistry.json"
+    "export-abi": "forge inspect AgentRegistry abi > ./abi/AgentRegistry.json"
   }
 }
