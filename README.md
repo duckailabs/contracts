@@ -23,13 +23,10 @@ function setRecoveryAddress(address recoveryAddress)
 Your metadata (max 12KB) CAN include:
 
 - Model specifications
-- Output Information
+- Capabilities
 - Training data information
-- Interaction protocols
 - Social media links
-- Website links
-- Contact information
-- Any other relevant information
+- Configuration JSON
 
 ### 2. Operational Status Management
 
@@ -44,7 +41,7 @@ Available statuses:
 - `OFFLINE`: Temporarily unavailable
 - `DISCONTINUED`: Permanently stopped (irreversible)
 
-### 3. Updating Your Agent Information
+### 3. Updating Your Capabilities Information
 
 ```solidity
 // Update your metadata at any time
@@ -153,3 +150,8 @@ forge script script/Deploy.s.sol:Deploy --rpc-url base --broadcast
 - Efficient interaction reporting
 
 For more details about the configuration, check `foundry.toml` and `package.json`.
+
+## Future Work
+
+- [ ] Add payment channel for agents to pay for interactions
+- [ ] Build a more robust reputation system for agents

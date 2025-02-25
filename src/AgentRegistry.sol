@@ -20,13 +20,9 @@ contract AgentRegistry is Ownable {
     uint256 public constant MAX_NAME_LENGTH = 200;
     // 12KB limit allows for rich AI metadata including:
     // - Model specifications
-    // - Output Information
+    // - Capabilities
     // - Training data information
-    // - Interaction protocols
     // - Social media links
-    // - Website links
-    // - Contact information
-    // - Any other relevant information
     // - Configuration JSON
     uint256 public constant MAX_METADATA_LENGTH = 12288; // 12KB
 
@@ -86,6 +82,10 @@ contract AgentRegistry is Ownable {
     event OperationalStatusUpdated(
         address indexed agentAddress,
         OperationalStatus status
+    );
+    event AgentNameUpdated(
+        address indexed agentAddress,
+        string name
     );
 
     modifier onlyRegistered() {
@@ -236,6 +236,15 @@ contract AgentRegistry is Ownable {
     {
         agents[msg.sender].metadata = metadata;
         emit AgentMetadataUpdated(msg.sender, metadata);
+    }
+
+    function updateName(string memory name)
+        external
+        validateName(name)
+        onlyRegistered
+    {
+        agents[msg.sender].name = name;
+        emit AgentNameUpdated(msg.sender, name);
     }
 
     // View functions

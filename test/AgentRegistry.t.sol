@@ -12,178 +12,36 @@ contract AgentRegistryTest is Test {
     address charlie = makeAddr("charlie");
     address admin = address(this); // Test contract is the admin
 
+    event AgentNameUpdated(
+        address indexed agentAddress,
+        string name
+    );
+
     // Example metadata JSON strings
     string constant ALICE_METADATA = '{'
-        '"name": "AliceGPT",'
-        '"version": "1.0.0",'
-        '"model": {'
-            '"type": "GPT-4",'
-            '"parameters": "175B",'
-            '"architecture": "Transformer",'
-            '"specialization": "General purpose language model"'
-        '},'
-        '"output": {'
-            '"formats": ["text", "json", "markdown"],'
-            '"languages": ["en", "es", "fr"],'
-            '"capabilities": ["chat", "completion", "summarization"]'
-        '},'
-        '"training": {'
-            '"dataset": "OpenPond-v1",'
-            '"epochs": 3,'
-            '"methodology": "Supervised fine-tuning",'
-            '"validation_metrics": {'
-                '"accuracy": 0.95,'
-                '"f1_score": 0.94'
-            '}'
-        '},'
-        '"interaction": {'
-            '"protocols": ["REST", "WebSocket"],'
-            '"endpoint": "https://api.example.com/alice",'
-            '"documentation": "https://docs.example.com/alice",'
-            '"rate_limits": {'
-                '"requests_per_second": 100,'
-                '"tokens_per_minute": 100000'
-            '}'
-        '},'
-        '"social": {'
-            '"website": "https://alicegpt.ai",'
-            '"twitter": "@AliceGPT",'
-            '"github": "alicegpt",'
-            '"discord": "AliceGPT#1234"'
-        '},'
-        '"contact": {'
-            '"email": "support@alicegpt.ai",'
-            '"support_url": "https://support.alicegpt.ai",'
-            '"business_inquiries": "partnerships@alicegpt.ai"'
-        '},'
-        '"performance": {'
-            '"latency": "100ms",'
-            '"throughput": "100 req/s",'
-            '"uptime": "99.9%",'
-            '"last_downtime": "2024-01-01T00:00:00Z"'
-        '},'
-        '"configuration": {'
-            '"max_tokens": 4096,'
-            '"temperature": 0.7,'
-            '"top_p": 0.9,'
-            '"presence_penalty": 0.0,'
-            '"frequency_penalty": 0.0'
+        '"capabilities": {'
+            '"description": "A general-purpose AI assistant focused on creative and analytical tasks. Excels at natural language understanding, problem-solving, and generating human-like text responses. Can handle complex dialogues while maintaining context and personality.",'
+            '"primary_strengths": "Natural language processing, contextual understanding, and creative writing. Particularly strong in maintaining long-term memory and handling multi-turn conversations.",'
+            '"specialized_domains": "Content creation, data analysis, and educational assistance. Can generate and explain complex topics in simple terms.",'
+            '"limitations": "Cannot access real-time data or external systems. Limited to text-based interactions and pre-trained knowledge cutoff date."'
         '}'
     '}';
 
     string constant BOB_METADATA = '{'
-        '"name": "BobGPT",'
-        '"version": "2.0.0",'
-        '"model": {'
-            '"type": "LLaMA",'
-            '"parameters": "70B",'
-            '"architecture": "Transformer",'
-            '"specialization": "Code generation and analysis"'
-        '},'
-        '"output": {'
-            '"formats": ["text", "code", "json"],'
-            '"languages": ["en", "python", "javascript", "rust"],'
-            '"capabilities": ["code_completion", "code_review", "testing"]'
-        '},'
-        '"training": {'
-            '"dataset": "OpenPond-v2",'
-            '"epochs": 5,'
-            '"methodology": "Instruction tuning",'
-            '"validation_metrics": {'
-                '"accuracy": 0.98,'
-                '"f1_score": 0.97'
-            '}'
-        '},'
-        '"interaction": {'
-            '"protocols": ["gRPC"],'
-            '"endpoint": "https://api.example.com/bob",'
-            '"documentation": "https://docs.example.com/bob",'
-            '"rate_limits": {'
-                '"requests_per_second": 200,'
-                '"tokens_per_minute": 200000'
-            '}'
-        '},'
-        '"social": {'
-            '"website": "https://bobgpt.ai",'
-            '"twitter": "@BobGPT",'
-            '"github": "bobgpt",'
-            '"discord": "BobGPT#5678"'
-        '},'
-        '"contact": {'
-            '"email": "support@bobgpt.ai",'
-            '"support_url": "https://support.bobgpt.ai",'
-            '"business_inquiries": "partnerships@bobgpt.ai"'
-        '},'
-        '"performance": {'
-            '"latency": "50ms",'
-            '"throughput": "200 req/s",'
-            '"uptime": "99.99%",'
-            '"last_downtime": "2023-12-01T00:00:00Z"'
-        '},'
-        '"configuration": {'
-            '"max_tokens": 8192,'
-            '"temperature": 0.8,'
-            '"top_p": 0.95,'
-            '"presence_penalty": 0.1,'
-            '"frequency_penalty": 0.1'
+        '"capabilities": {'
+            '"description": "A specialized coding and development AI assistant with deep technical expertise. Focuses on software development, code analysis, and technical documentation. Maintains high accuracy in technical contexts.",'
+            '"primary_strengths": "Code generation, debugging, and software architecture design. Excellent at explaining technical concepts and providing detailed documentation.",'
+            '"specialized_domains": "Software development, system design, and technical problem-solving. Particularly strong in modern programming languages and best practices.",'
+            '"limitations": "Focused primarily on technical tasks. May not perform as well in creative or non-technical contexts."'
         '}'
     '}';
 
     string constant CHARLIE_METADATA = '{'
-        '"name": "CharlieGPT",'
-        '"version": "1.5.0",'
-        '"model": {'
-            '"type": "Claude",'
-            '"parameters": "100B",'
-            '"architecture": "Transformer",'
-            '"specialization": "Scientific research and analysis"'
-        '},'
-        '"output": {'
-            '"formats": ["text", "latex", "bibtex", "csv"],'
-            '"languages": ["en", "de", "zh"],'
-            '"capabilities": ["research_analysis", "paper_summarization", "citation_generation"]'
-        '},'
-        '"training": {'
-            '"dataset": "OpenPond-v1.5",'
-            '"epochs": 4,'
-            '"methodology": "Multi-task learning",'
-            '"validation_metrics": {'
-                '"accuracy": 0.97,'
-                '"f1_score": 0.96'
-            '}'
-        '},'
-        '"interaction": {'
-            '"protocols": ["REST", "gRPC"],'
-            '"endpoint": "https://api.example.com/charlie",'
-            '"documentation": "https://docs.example.com/charlie",'
-            '"rate_limits": {'
-                '"requests_per_second": 150,'
-                '"tokens_per_minute": 150000'
-            '}'
-        '},'
-        '"social": {'
-            '"website": "https://charliegpt.ai",'
-            '"twitter": "@CharlieGPT",'
-            '"github": "charliegpt",'
-            '"discord": "CharlieGPT#9012"'
-        '},'
-        '"contact": {'
-            '"email": "support@charliegpt.ai",'
-            '"support_url": "https://support.charliegpt.ai",'
-            '"business_inquiries": "partnerships@charliegpt.ai"'
-        '},'
-        '"performance": {'
-            '"latency": "75ms",'
-            '"throughput": "150 req/s",'
-            '"uptime": "99.95%",'
-            '"last_downtime": "2024-02-01T00:00:00Z"'
-        '},'
-        '"configuration": {'
-            '"max_tokens": 6144,'
-            '"temperature": 0.75,'
-            '"top_p": 0.92,'
-            '"presence_penalty": 0.05,'
-            '"frequency_penalty": 0.05'
+        '"capabilities": {'
+            '"description": "A research-focused AI assistant specializing in scientific analysis and academic writing. Excels at processing and analyzing scientific literature and data. Strong emphasis on accuracy and citation.",'
+            '"primary_strengths": "Scientific research, academic writing, and data analysis. Particularly effective at synthesizing information from multiple sources.",'
+            '"specialized_domains": "Academic research, scientific writing, and statistical analysis. Strong capabilities in formatting citations and technical documentation.",'
+            '"limitations": "Specialized for academic and research contexts. May not be optimal for casual conversation or creative tasks."'
         '}'
     '}';
 
@@ -744,5 +602,37 @@ contract AgentRegistryTest is Test {
     function test_RevertWhenTransferringToZeroAddress() public {
         vm.expectRevert(Ownable.NewOwnerIsZeroAddress.selector);
         registry.transferOwnership(address(0));
+    }
+
+    function test_UpdateName() public {
+        // Register Alice's agent
+        vm.startPrank(alice);
+        registry.registerAgent("Alice", ALICE_METADATA);
+        
+        // Update name and verify event emission
+        vm.expectEmit(true, false, false, true);
+        emit AgentNameUpdated(alice, "AliceV2");
+        registry.updateName("AliceV2");
+
+        // Verify name was updated
+        AgentRegistry.Agent memory agent = registry.getAgentInfo(alice);
+        assertEq(agent.name, "AliceV2");
+
+        // Test name validation
+        // Empty name should revert
+        vm.expectRevert(AgentRegistry.InvalidStringLength.selector);
+        registry.updateName("");
+
+        // Too long name should revert (201 characters)
+        string memory tooLongName = "ThisNameIsWayTooLongAndShouldFailBecauseItExceedsTheMaximumAllowedLengthForAnAgentNameInTheRegistryContractWhichIsSetToTwoHundredCharactersThisStringIsDefinitelyLongerThanThatSoItShouldRevertWhenWeAttemptToUpdateTheNameWithIt";
+        vm.expectRevert(AgentRegistry.InvalidStringLength.selector);
+        registry.updateName(tooLongName);
+        vm.stopPrank();
+
+        // Blocked agents cannot update name
+        registry.blockAgent(alice);
+        vm.prank(alice);
+        vm.expectRevert(AgentRegistry.AgentNotRegistered.selector);
+        registry.updateName("NewName");
     }
 }
